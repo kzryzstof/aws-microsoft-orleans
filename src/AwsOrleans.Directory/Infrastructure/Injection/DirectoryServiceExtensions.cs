@@ -7,7 +7,7 @@ using Orleans.Configuration;
 
 namespace DriftingBytesLabs.AwsOrleans.Directory.Infrastructure.Injection;
 
-public static class DirectoryServiceCollection
+public static class DirectoryServiceExtensions
 {
     public static IHostBuilder UseDirectoryServices
     (

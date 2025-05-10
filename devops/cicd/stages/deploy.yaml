@@ -92,7 +92,7 @@ stages:
     - stage: TFApply_${{ parameters.environment_name }}
       dependsOn   :
         - TFPlan_${{ parameters.environment_name }}
-        #- ${{ parameters.dependsOn }}
+        - ${{ parameters.dependsOn }}
       displayName : 'Deploy (${{ parameters.environment_name }}-${{ parameters.environment_instance }})'
       jobs:
         - deployment: Deploy
