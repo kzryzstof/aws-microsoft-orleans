@@ -1,7 +1,15 @@
+using DriftingBytesLabs.AwsOrleans.Directory.Infrastructure.Injection;
 using DriftingBytesLabs.AwsOrleans.Host.Api.v1;
 using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+//  --------------------------------------------------------------------------------------------------------------------
+//  Injects our services
+//  --------------------------------------------------------------------------------------------------------------------
+builder.Services
+    .AddDirectoryServices()
+    ;
 
 //  --------------------------------------------------------------------------------------------------------------------
 //  Sets up Open API.

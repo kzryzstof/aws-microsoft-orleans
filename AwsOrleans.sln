@@ -4,6 +4,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E4C72C35-AA5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwsOrleans.Host", "src\AwsOrleans.Host\AwsOrleans.Host.csproj", "{E24F6A81-7F0B-4809-9E3A-43A216275691}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwsOrleans.Directory", "AwsOrleans.Directory\AwsOrleans.Directory.csproj", "{6581883A-DF57-4F86-85CD-34CF5AFB9720}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwsOrleans.Abstractions", "AwsOrleans.Abstractions\AwsOrleans.Abstractions.csproj", "{BE54BD23-0AC4-4B60-AB9D-D066CE28CEEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,8 +18,18 @@ Global
 		{E24F6A81-7F0B-4809-9E3A-43A216275691}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E24F6A81-7F0B-4809-9E3A-43A216275691}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E24F6A81-7F0B-4809-9E3A-43A216275691}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6581883A-DF57-4F86-85CD-34CF5AFB9720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6581883A-DF57-4F86-85CD-34CF5AFB9720}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6581883A-DF57-4F86-85CD-34CF5AFB9720}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6581883A-DF57-4F86-85CD-34CF5AFB9720}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE54BD23-0AC4-4B60-AB9D-D066CE28CEEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE54BD23-0AC4-4B60-AB9D-D066CE28CEEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE54BD23-0AC4-4B60-AB9D-D066CE28CEEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE54BD23-0AC4-4B60-AB9D-D066CE28CEEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E24F6A81-7F0B-4809-9E3A-43A216275691} = {E4C72C35-AA59-4007-8AC3-BC0446689EC9}
+		{6581883A-DF57-4F86-85CD-34CF5AFB9720} = {E4C72C35-AA59-4007-8AC3-BC0446689EC9}
+		{BE54BD23-0AC4-4B60-AB9D-D066CE28CEEE} = {E4C72C35-AA59-4007-8AC3-BC0446689EC9}
 	EndGlobalSection
 EndGlobal

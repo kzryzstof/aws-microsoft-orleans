@@ -21,4 +21,8 @@
         <PackageReference Include="Scalar.AspNetCore" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\AwsOrleans.Directory\AwsOrleans.Directory.csproj" />
+    </ItemGroup>
+
 </Project>
