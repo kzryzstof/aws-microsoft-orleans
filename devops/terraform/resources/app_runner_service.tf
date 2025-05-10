@@ -26,7 +26,7 @@ resource "aws_apprunner_service" "default" {
 }
 
 //  IAM
-resource "aws_iam_role" "app_runner" {
+resource "aws_iam_role" "app_runner_role" {
   name = "app_runner_role"
 
   # Terraform's "jsonencode" function converts a
@@ -48,9 +48,37 @@ resource "aws_iam_role" "app_runner" {
   tags = local.tags
 }
 
+resource "aws_iam_policy" "ecr_access" {
+  name        = "app_runner_ecr_access_policy"
+  description = "Policy to allow ECR access for App Runner role"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage"
+        ],
+        Effect   = "Allow",
+        Resource = "*"
+      }
+    ]
+  })
+
+  tags = local.tags
+}
+
 resource "aws_iam_role_policy_attachment" "app_runner" {
-  role       = aws_iam_role.app_runner.name
+  role       = aws_iam_role.app_runner_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "app_runner_ecr_access" {
+  role       = aws_iam_role.app_runner_role.name
+  policy_arn = aws_iam_policy.ecr_access.arn
 }
 
 //  Scaling.
