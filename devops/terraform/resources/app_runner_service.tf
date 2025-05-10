@@ -1,7 +1,7 @@
 resource "aws_apprunner_service" "default" {
   service_name = local.service_name
 
-  auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.default.arn
+  auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.auto.arn
 
   source_configuration {
     image_repository {
@@ -17,8 +17,12 @@ resource "aws_apprunner_service" "default" {
   tags = local.tags
 }
 
-resource "aws_apprunner_auto_scaling_configuration_version" "default" {
+resource "aws_apprunner_auto_scaling_configuration_version" "auto" {
   auto_scaling_configuration_name = "default_scaling"
   min_size = 1
   max_size = 1
+}
+
+resource "aws_apprunner_default_auto_scaling_configuration_version" "default" {
+  auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.auto.arn
 }
