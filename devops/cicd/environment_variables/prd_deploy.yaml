@@ -1,0 +1,5 @@
+variables:
+  - template  : ./deploy.yaml
+
+  - name  : terraform_BucketName
+    value : 'terraform-prd-01-ca-central' 

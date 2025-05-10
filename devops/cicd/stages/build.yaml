@@ -1,0 +1,156 @@
+parameters:
+  - name: pipelineEnvironmentVariables
+    type: string
+  - name: poolName
+    type: string
+
+stages:
+  - stage: Build
+    dependsOn: []
+    jobs:
+      - job: Build
+        displayName: 'Build'
+        variables:
+          - template: ${{ parameters.pipelineEnvironmentVariables }}
+
+        workspace:
+          clean: all
+          
+        pool:
+          name:  ${{ parameters.poolName }}
+
+        steps:
+
+          - bash: |
+              echo "Installing AWS CLI on Linux..."
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+              sudo ./aws/install
+              aws --version
+            displayName: 'install AWS CLI'
+          
+          #          - task: Docker@2
+#            displayName: login to ACR
+#            inputs:
+#              containerRegistry : ${{ variables.containerRegistry_ServiceConnectionName }}
+#              command           : 'login'
+
+          - task: NuGetAuthenticate@1
+            displayName: 'authenticate nuget feed'
+
+          - task: UseDotNet@2
+            displayName: 'install .net SDK'
+            inputs:
+              useGlobalJson: true
+
+          - task: richardfennellBM.BM-VSTS-Versioning-Task.Version-DotNetCoreAssemblies-Task.VersionDotNetCoreAssemblies@3
+            displayName: 'version'
+            inputs:
+              VersionRegex: '\d+\.\d+\.\d+'
+              AddDefault: true
+              
+          - script: |
+              aws ecr get-login-password --region ${{ variables.terraform_AwsRegion }} | docker login --username AWS --password-stdin ${{ variables.awsContainerRegistryUrl }} 
+            displayName: 'login to AWS'
+            env:
+              AWS_ACCESS_KEY_ID: "$(AwsAccessKeyId)"
+              AWS_SECRET_ACCESS_KEY: "$(AwsSecretAccessKey)"
+              
+              #          - task: AzureCLI@2
+#            displayName: 'configure ARM connector'
+#            inputs:
+#              azureSubscription: ${{ variables.demoTapeSubscription_ServiceConnectionName }}
+#              scriptType: pscore
+#              scriptLocation: inlineScript
+#              addSpnToEnvironment: true
+#              inlineScript: |
+#                Write-Host "##vso[task.setvariable variable=ARM_CLIENT_ID;]$env:servicePrincipalId"
+#                Write-Host "##vso[task.setvariable variable=ARM_CLIENT_SECRET;]$env:servicePrincipalKey"
+#                Write-Host "##vso[task.setvariable variable=ARM_TENANT_ID;]$env:tenantId"
+              
+#          - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+#            - task: AzureCLI@2
+#              displayName: 'untag outdated images'
+#              inputs:
+#                azureSubscription: ${{ variables.acrResourceGroup_ServiceConnectionName }}
+#                scriptType: 'pscore'
+#                scriptLocation: 'inlineScript'
+#                inlineScript: |
+#                  $registryName = '${{ variables.acrName }}'
+#                  $doNotDeleteTags = @('dev', 'prd')
+#                  $repoArray = (az acr repository list --name $registryName --output json | ConvertFrom-Json)
+#  
+#                  foreach ($repo in $repoArray)
+#                  {
+#                    if($repo -eq "${{ variables.imageRepository }}")
+#                    {
+#                      $tagsArray = (az acr repository show-tags --name $registryName --repository $repo --orderby time_asc --output json | ConvertFrom-Json )
+#  
+#                      foreach($tag in $tagsArray)
+#                      {
+#                        if ($doNotDeleteTags -contains $tag)
+#                        {
+#                          Write-Output ("The following tag will not be removed: '$tag'")
+#                        }
+#                        else
+#                        {
+#                          az acr repository untag --name $registryName --image $repo":"$tag
+#                        }
+#                      }
+#                    }
+#                  }
+
+          - task: Cache@2
+            displayName: 'cache nuget packages'
+            inputs:
+              key: 'nuget | "$(Agent.OS)" | **/packages.lock.json,!**/bin/**,!**/obj/**'
+              restoreKeys: |
+                nuget | "$(Agent.OS)"
+                nuget
+              path: ${{ variables.nugetPackagesCachePath }}
+
+          - task: PowerShell@2
+            displayName: 'restore'
+            inputs:
+              targetType: 'inline'
+              script: |
+                dotnet restore --configfile ./NuGet.config --packages ${{ variables.nugetPackagesCachePath }}
+
+          - task: DotNetCoreCLI@2
+            displayName: 'build'
+            inputs:
+              command   : build
+              projects  : ${{ variables.csharpProjectFiles }}
+              arguments : '--no-restore --configuration ${{ variables.buildConfiguration }} -p:Version=$(Build.BuildNumber)'
+
+          #- task: DotNetCoreCLI@2
+          #  displayName: 'tests'
+          #  inputs:
+          #    command             : test
+          #    projects            : ${{ variables.csharpTestProjectFiles }}
+          #    publishTestResults  : false
+          #    arguments           : '--no-restore --no-build --configuration ${{ variables.buildConfiguration }} /p:CollectCoverage=true --settings coverlet.runsettings -e AZURE_TENANT_ID=$(ARM_TENANT_ID) -e AZURE_CLIENT_ID=$(ARM_CLIENT_ID) -e AZURE_CLIENT_SECRET=$(ARM_CLIENT_SECRET)'
+  
+          - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+            - task: DotNetCoreCLI@2
+              displayName: 'publish'
+              inputs:
+                command   : publish
+                publishWebProjects: false
+                projects  : |
+                  ${{ variables.webAppProject }}
+                arguments : '--no-restore --no-build --configuration ${{ variables.buildConfiguration }} /t:PublishContainer -p ContainerImageTag=$(Build.BuildNumber) -p ContainerRepository=${{ variables.imageRepository }} -p ContainerRegistry=${{ variables.awsContainerRegistryUrl }}'
+
+          - task: reportgenerator@5
+            displayName: 'generate coverage'
+            inputs:
+              reports     : '$(Build.SourcesDirectory)/**/coverage.opencover.xml'
+              targetdir   : '$(Build.SourcesDirectory)/CoverageResults'
+              reporttypes : 'HtmlInline_AzurePipelines;Cobertura'
+
+          - task: PublishCodeCoverageResults@2
+            displayName: 'publish coverage'
+            inputs:
+              summaryFileLocation : '$(System.DefaultWorkingDirectory)/CoverageResults/Cobertura.xml'
+              pathToSources       : '$(Build.SourcesDirectory)'
+              reportDirectory     : '$(System.DefaultWorkingDirectory)/CoverageResults'

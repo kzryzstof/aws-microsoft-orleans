@@ -1,0 +1,6 @@
+variables:
+  - template  : ./deploy.yaml
+    
+  - name  : terraform_BucketName
+    value : 'terraform-dev-01-ca-central' 
+  

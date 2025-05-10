@@ -1,0 +1,172 @@
+parameters:
+  - name: environment_name
+    type: string
+  - name: environment_instance
+    type: string
+  - name: pipelineEnvironmentVariables
+    type: string
+  - name: dependsOn
+    type: object
+    default: []
+  - name: poolName
+    type: string
+
+stages:
+  - stage: TFPlan_${{ parameters.environment_name }}
+    dependsOn: []
+    displayName: 'Plan (${{ parameters.environment_name }}-${{ parameters.environment_instance }})'
+    jobs:
+
+      - job: PlanAndInit
+        displayName: "Build TF Plan"
+
+        pool:
+          name: ${{ parameters.poolName }}
+
+        workspace:
+          clean: all
+
+        variables:
+          - template  : ${{ parameters.pipelineEnvironmentVariables }}
+          - name      : terraformFolder
+            value     : '${{ variables.terraform_DevOpsFolder }}/resources'
+          - name      : terraformStateFile
+            value     : '${{ variables.deploy_ServiceName }}.${{ parameters.environment_name }}.${{ parameters.environment_instance }}.tfstate'
+          - name      : terraformParametersFile
+            value     : '${{ variables.terraform_DevOpsFolder}}/parameters/${{ parameters.environment_name }}.tfvars.json'
+
+        timeoutInMinutes: 10
+
+        steps:
+          - task: TerraformInstaller@1
+            displayName: install
+            inputs:
+              terraformVersion: latest
+
+          - task: TerraformTask@5
+            displayName: init
+            inputs:
+              command               : init
+              provider              : aws
+              ensureBackend         : true
+              backendServiceAws     : ${{ variables.driftingBytesLabsAccount_ServiceConnectionName }}
+              backendAWSBucketName  : ${{ variables.terraform_BucketName }}
+              backendAWSKey         : ${{ variables.terraformStateFile }}
+              workingDirectory      : ${{ variables.terraformFolder }}
+
+          - task: TerraformTask@5
+            displayName: validate
+            inputs:
+              command           : validate
+              provider          : aws
+              workingDirectory  : ${{ variables.terraformFolder }}
+
+          - task: TerraformTask@5
+            displayName: plan
+            inputs:
+              command                       : plan
+              commandOptions                : -input=false -lock=false -var-file=${{ variables.terraformParametersFile }} -out=tfplan.${{ parameters.environment_name }} -detailed-exitcode
+              provider                      : aws
+              environmentServiceNameAWS     : ${{ variables.driftingBytesLabsAccount_ServiceConnectionName }}
+              workingDirectory              : ${{ variables.terraformFolder }}
+              publishPlanResults            : 'Plan (${{ parameters.environment_name }})'
+            env:
+              "TF_VAR_image_tag"            : ${{ variables.azureContainerRegistryUrl }}/${{ variables.imageRepository }}:${{ parameters.environment_name }}
+              "TF_VAR_build_number"         : $(Build.BuildNumber)
+              "TF_VAR_environment_name"     : ${{ parameters.environment_name }}
+              "TF_VAR_environment_instance" : ${{ parameters.environment_instance }}
+
+          - bash: rm -r .terraform
+            displayName: "clean-up"
+            workingDirectory: ${{ variables.terraformFolder }}
+
+          - task: PublishBuildArtifacts@1
+            condition: succeeded()
+            displayName: "publish 'tfplan${{ parameters.environment_name }}' artifact"
+            inputs:
+              PathtoPublish   : ${{ variables.terraform_DevOpsFolder }}
+              ArtifactName    : tfplan${{ parameters.environment_name }}
+              publishLocation : Container
+
+  - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+    - stage: TFApply_${{ parameters.environment_name }}
+      dependsOn   :
+        - TFPlan_${{ parameters.environment_name }}
+        #- ${{ parameters.dependsOn }}
+      displayName : 'Deploy (${{ parameters.environment_name }}-${{ parameters.environment_instance }})'
+      jobs:
+        - deployment: Deploy
+
+          variables:
+            - template  : ${{ parameters.pipelineEnvironmentVariables }}
+            - name      : terraformStateFile
+              value     : '${{ variables.deploy_ServiceName }}.${{ parameters.environment_name }}.${{ parameters.environment_instance }}.tfstate'
+            - name      : workingDirectory
+              value     : '$(Pipeline.Workspace)/tfplan${{ parameters.environment_name }}/resources'
+
+          timeoutInMinutes: 10
+
+          workspace:
+            clean: all
+
+          environment: ${{ variables.deploy_ServiceName }}-${{ parameters.environment_name }}
+
+          pool:
+            name    : ${{ parameters.poolName }}
+
+          strategy:
+            runOnce:
+              deploy:
+                steps:
+                  - download: current
+                    artifact: tfplan${{ parameters.environment_name }}
+
+                  #- task: Docker@2
+                  #  displayName: login to ACR
+                  #  inputs:
+                  #    containerRegistry: ${{ variables.containerRegistry_ServiceConnectionName }}
+                  #    command: 'login'
+
+                  - task: TerraformInstaller@1
+                    displayName: 'install'
+                    inputs:
+                      terraformVersion: latest
+
+                  - task: TerraformTask@5
+                    displayName: init
+                    inputs:
+                      command               : init
+                      provider              : aws
+                      ensureBackend         : true
+                      backendServiceAws     : ${{ variables.driftingBytesLabsAccount_ServiceConnectionName }}
+                      backendAWSBucketName  : ${{ variables.terraform_BucketName }}
+                      backendAWSKey         : ${{ variables.terraformStateFile }}
+                      workingDirectory      : ${{ variables.workingDirectory }}
+
+                  #- bash: docker pull ${{ variables.azureContainerRegistryUrl }}/${{ variables.imageRepository }}:$(Build.BuildNumber)
+                  #  displayName: 'pull image'
+
+                  #- bash: docker tag ${{ variables.azureContainerRegistryUrl }}/${{ variables.imageRepository }}:$(Build.BuildNumber) ${{ variables.azureContainerRegistryUrl }}/${{ variables.imageRepository }}:${{ parameters.environment_name }}
+                  #  displayName: 'tag image'
+
+                  #- bash: docker push ${{ variables.azureContainerRegistryUrl }}/${{ variables.imageRepository }}:${{ parameters.environment_name }}
+                  #  displayName: 'push image'
+
+                  - task: TerraformTask@5
+                    displayName: 'apply'
+                    inputs:
+                      command                         : apply
+                      provider                        : aws
+                      environmentServiceNameAWS       : ${{ variables.driftingBytesLabsAccount_ServiceConnectionName }}
+                      workingDirectory                : ${{ variables.workingDirectory }}
+                      commandOptions                  : -input=false tfplan.${{ parameters.environment_name }}
+
+#  - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+#    - template: './e2e_tests.yaml'
+#      parameters:
+#        dependsOn:
+#          - TFApply_${{ parameters.environment_name }}
+#        environment_name              : ${{ parameters.environment_name }}
+#        environment_instance          : ${{ parameters.environment_instance }}
+#        pipelineEnvironmentVariables  : ${{ parameters.pipelineEnvironmentVariables }}
+#        poolName                      : ${{ parameters.poolName }}
