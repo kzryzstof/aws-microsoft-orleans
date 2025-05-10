@@ -141,16 +141,16 @@ stages:
                   ${{ variables.webAppProject }}
                 arguments : '--no-restore --no-build --configuration ${{ variables.buildConfiguration }} /t:PublishContainer -p ContainerImageTag=$(Build.BuildNumber) -p ContainerRepository=${{ variables.imageRepository }} -p ContainerRegistry=${{ variables.awsContainerRegistryUrl }}'
 
-          - task: reportgenerator@5
-            displayName: 'generate coverage'
-            inputs:
-              reports     : '$(Build.SourcesDirectory)/**/coverage.opencover.xml'
-              targetdir   : '$(Build.SourcesDirectory)/CoverageResults'
-              reporttypes : 'HtmlInline_AzurePipelines;Cobertura'
-
-          - task: PublishCodeCoverageResults@2
-            displayName: 'publish coverage'
-            inputs:
-              summaryFileLocation : '$(System.DefaultWorkingDirectory)/CoverageResults/Cobertura.xml'
-              pathToSources       : '$(Build.SourcesDirectory)'
-              reportDirectory     : '$(System.DefaultWorkingDirectory)/CoverageResults'
+#          - task: reportgenerator@5
+#            displayName: 'generate coverage'
+#            inputs:
+#              reports     : '$(Build.SourcesDirectory)/**/coverage.opencover.xml'
+#              targetdir   : '$(Build.SourcesDirectory)/CoverageResults'
+#              reporttypes : 'HtmlInline_AzurePipelines;Cobertura'
+#
+#          - task: PublishCodeCoverageResults@2
+#            displayName: 'publish coverage'
+#            inputs:
+#              summaryFileLocation : '$(System.DefaultWorkingDirectory)/CoverageResults/Cobertura.xml'
+#              pathToSources       : '$(Build.SourcesDirectory)'
+#              reportDirectory     : '$(System.DefaultWorkingDirectory)/CoverageResults'
