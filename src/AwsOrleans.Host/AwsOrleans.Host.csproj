@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\AwsOrleans.Directory\AwsOrleans.Directory.csproj" />
+      <ProjectReference Include="..\AwsOrleans.Directory\AwsOrleans.Directory.csproj" />
     </ItemGroup>
 
 </Project>
