@@ -13,7 +13,7 @@ resource "aws_apprunner_service" "default" {
     }
     auto_deployments_enabled = false
   }
-
+  
   tags = local.tags
 }
 
