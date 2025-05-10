@@ -1,0 +1,17 @@
+<Project>
+    <PropertyGroup>
+        <OutputType>Library</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AnalysisMode>Recommended</AnalysisMode>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <NuGetAuditMode>direct</NuGetAuditMode>
+        <IsPackable>false</IsPackable>
+        <IsPublisheable>false</IsPublisheable>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <NoWarn>1701;1702;CA1707;CA1848;CA1816</NoWarn>
+    </PropertyGroup>
+</Project>
