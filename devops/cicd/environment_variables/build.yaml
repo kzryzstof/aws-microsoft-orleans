@@ -27,6 +27,6 @@ variables:
   - name  : imageArtifactName
     value : 'aws-orleans'
   - name  : terraform_AwsRegion
-    value : 'ca-central-1'
+    value : 'us-east-1'
   - name  : awsContainerRegistryUrl
     value : '696927138987.dkr.ecr.us-east-1.amazonaws.com'
