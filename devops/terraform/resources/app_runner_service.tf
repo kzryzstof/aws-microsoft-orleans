@@ -4,19 +4,56 @@ resource "aws_apprunner_service" "default" {
   auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.auto.arn
 
   source_configuration {
+    
     image_repository {
+
       image_configuration {
         port = "8080"
       }
+
       image_identifier      = var.image_tag
       image_repository_type = "ECR"
     }
+
+    authentication_configuration {
+      access_role_arn = aws_iam_role.app_runner.arn
+    }
+    
     auto_deployments_enabled = false
   }
   
   tags = local.tags
 }
 
+//  IAM
+resource "aws_iam_role" "app_runner" {
+  name = "app_runner_role"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "tasks.apprunner.amazonaws.com"
+        }
+      },
+    ]
+  })
+
+  tags = local.tags
+}
+
+resource "aws_iam_role_policy_attachment" "app_runner" {
+  role       = aws_iam_role.app_runner.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess"
+}
+
+//  Scaling.
 resource "aws_apprunner_auto_scaling_configuration_version" "auto" {
   auto_scaling_configuration_name = "default_scaling"
   min_size = 1
