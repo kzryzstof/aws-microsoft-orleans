@@ -47,14 +47,14 @@
       },
       "OpenTelemetry.Instrumentation.AWS": {
         "type": "Direct",
-        "requested": "[1.12.0, )",
-        "resolved": "1.12.0",
-        "contentHash": "ADIekYjW3fhqk5UGprspo0RESskSBLc9Topfisi+CiuU908wPZ83MuvdmB5sJAlBkxOG6jRDOPg3o9MVriAbYA==",
+        "requested": "[1.11.3, )",
+        "resolved": "1.11.3",
+        "contentHash": "z8t9isM6vEh5PUTjBMOjJFeHVMwWtXq0Me4RN0yvE4ajHAkuo/W+HBi+PV0NnUczYMRTCXv+3eRRWiheEyg/JQ==",
         "dependencies": {
-          "AWSSDK.Core": "[4.0.0, 5.0.0)",
-          "AWSSDK.SQS": "[4.0.0, 5.0.0)",
-          "AWSSDK.SimpleNotificationService": "[4.0.0, 5.0.0)",
-          "OpenTelemetry.Extensions.AWS": "1.12.0"
+          "AWSSDK.Core": "[3.7.400, 4.0.0)",
+          "AWSSDK.SQS": "[3.7.400, 4.0.0)",
+          "AWSSDK.SimpleNotificationService": "[3.7.400, 4.0.0)",
+          "OpenTelemetry.Extensions.AWS": "1.11.3"
         }
       },
       "OpenTelemetry.Instrumentation.Http": {
@@ -88,23 +88,23 @@
       },
       "AWSSDK.Core": {
         "type": "Transitive",
-        "resolved": "4.0.0",
-        "contentHash": "fUQeMoO358Gy/XhG7jphvY+ga4gUUonR7qc9rBAU0lXFJmSsaHVXFkhLi7+YxrhqIF/H4lWzr3SQ6rVHhSDM3w=="
+        "resolved": "3.7.400",
+        "contentHash": "qw+WGhxcYtZ6wc1uibOu9XXLsfUpQ1r+gWa0euFnm1e9HowQbcwvKvOqQzwBNqIBO7S5IJ26T9kV/eFiwvZAkQ=="
       },
       "AWSSDK.SimpleNotificationService": {
         "type": "Transitive",
-        "resolved": "4.0.0",
-        "contentHash": "YPCwP1LYJFXPWtmxYA4XByDGydW5otAqBYBCFb/5gBTyr4QoVRzu4+RI6fmAeDP3SLVyLSBMkoRQ5oMpVq9M/Q==",
+        "resolved": "3.7.400",
+        "contentHash": "x5jqxMywc4/WEh3Mz5qFPi3YaqIgYpPpJLyAWSi1Ie5jpOsqeWKqJ/BZYQV4OvbNnlOMWoEwHIN85p3cLp5KhQ==",
         "dependencies": {
-          "AWSSDK.Core": "[4.0.0, 5.0.0)"
+          "AWSSDK.Core": "[3.7.400, 4.0.0)"
         }
       },
       "AWSSDK.SQS": {
         "type": "Transitive",
-        "resolved": "4.0.0",
-        "contentHash": "lTtR3M0SWe20408X9VtplsqZuc+0fjyROPJdcHFpcFWjRzg8y2MpZfsUxFe5PXwLfpw/cU+57NkuMAjJOYsAng==",
+        "resolved": "3.7.400",
+        "contentHash": "UHG5JMcvzEHbV/UH13NjBR1KjaMXFMmoZrz9GDHp+JKuFcGPGu1aJ9Vrxkjm0NkDXXjs/WbKcnXISA8mBV91jw==",
         "dependencies": {
-          "AWSSDK.Core": "[4.0.0, 5.0.0)"
+          "AWSSDK.Core": "[3.7.400, 4.0.0)"
         }
       },
       "Microsoft.Extensions.Configuration": {
@@ -225,10 +225,10 @@
       },
       "OpenTelemetry.Extensions.AWS": {
         "type": "Transitive",
-        "resolved": "1.12.0",
-        "contentHash": "vIZSffVe7lFuUFMveWOuavtS503RVSohrcqvi1fhE0AzEX+J7MTGf3d8DsHPsyDZof9hUYvEYSgGsWxJo3aeyw==",
+        "resolved": "1.11.3",
+        "contentHash": "SQdXZTGSwj4VRUwIiOxEAKdKxSyQgHz76AZsXys6DuIxnZoBe1WiY1Re8jHcimndzxPE5kCyignBKerCfFOGoQ==",
         "dependencies": {
-          "OpenTelemetry": "[1.12.0, 2.0.0)"
+          "OpenTelemetry": "[1.11.2, 2.0.0)"
         }
       },
       "System.Diagnostics.DiagnosticSource": {
