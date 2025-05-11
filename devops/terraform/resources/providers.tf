@@ -5,6 +5,10 @@ terraform {
     aws = {
       source = "hashicorp/aws"
     }
+    stringfunctions = {
+      source  = "random-things/string-functions"
+      version = "~> 0.1.0"
+    }
   }
 }
 

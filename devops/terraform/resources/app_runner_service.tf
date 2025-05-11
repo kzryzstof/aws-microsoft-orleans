@@ -1,32 +1,8 @@
 //  --------------------------------------------------------------------------------------------------------------------
-//  IAM Role
-//  --------------------------------------------------------------------------------------------------------------------
-resource "aws_iam_role" "app_runner_role" {
-  name = "AwsOrleansRunnerRole"
-  
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
-        Principal = {
-          # Important: apprunner.amazonaws.com or tasks.apprunner.amazonaws.com prevents the image from being pulled.
-          Service = "build.apprunner.amazonaws.com"
-        }
-      },
-    ]
-  })
-
-  tags = local.tags
-}
-
-//  --------------------------------------------------------------------------------------------------------------------
 //  App Runner resource
 //  --------------------------------------------------------------------------------------------------------------------
 resource "aws_apprunner_service" "default" {
-  service_name = local.service_name
+  service_name = local.resources_name.app_runner_name
 
   auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.auto.arn
 
@@ -43,7 +19,7 @@ resource "aws_apprunner_service" "default" {
     }
 
     authentication_configuration {
-      access_role_arn = aws_iam_role.app_runner_role.arn
+      access_role_arn = aws_iam_role.service_role.arn
     }
     
     auto_deployments_enabled = false
@@ -63,12 +39,4 @@ resource "aws_apprunner_auto_scaling_configuration_version" "auto" {
 
 resource "aws_apprunner_default_auto_scaling_configuration_version" "default" {
   auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.auto.arn
-}
-
-//  --------------------------------------------------------------------------------------------------------------------
-//  App Runner permissions
-//  --------------------------------------------------------------------------------------------------------------------
-resource "aws_iam_role_policy_attachment" "app_runner" {
-  role       = aws_iam_role.app_runner_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess"
 }
