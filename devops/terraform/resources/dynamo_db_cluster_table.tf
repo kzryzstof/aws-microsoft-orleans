@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "orleans_cluster" {
-  name           = "OrleansCluster"
+  name           = "OrleansClusterTable"
   billing_mode   = "PAY_PER_REQUEST"
   hash_key       = "DeploymentId"
   range_key      = "Address"
