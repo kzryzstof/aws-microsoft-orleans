@@ -70,13 +70,15 @@ public static class DirectoryServiceExtensions
         }
         else
         {
-            // siloBuilder.UseAzureStorageClustering(options =>
-            // {
-            //     options.TableServiceClient = new TableServiceClient
-            //     (
-            //         orleansConfiguration.ClusterStorageAccountConnectionString
-            //     );
-            // });
+            siloBuilder.UseDynamoDBClustering
+            (
+                options =>
+                {
+                    options.CreateIfNotExists = true;
+                    options.Service = orleansConfiguration.Region;
+                    options.TableName = orleansConfiguration.ClusteringTableName;
+                }
+            );
         }
     }
     
@@ -98,19 +100,17 @@ public static class DirectoryServiceExtensions
         OrleansConfiguration orleansConfiguration
     )
     {
-        // siloBuilder.AddAzureTableGrainStorage
-        // (
-        //     "devices",
-        //     options =>
-        //     {
-        //         options.DeleteStateOnClear = true;
-        //         
-        //         options.TableServiceClient = new TableServiceClient
-        //         (
-        //             orleansConfiguration.UsersStorageAccountConnectionString
-        //         );
-        //     }
-        // );
+        siloBuilder.AddDynamoDBGrainStorage
+        (
+            "data",
+            options =>
+            {
+                options.DeleteStateOnClear = true;
+                options.CreateIfNotExists = true;
+                options.Service = orleansConfiguration.Region;
+                options.TableName = orleansConfiguration.DataGrainTableName;
+            }
+        );
     }
 
     private static bool RunsLocally

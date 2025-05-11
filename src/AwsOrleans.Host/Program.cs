@@ -1,13 +1,19 @@
+using AwsOrleans.Diagnostics.Infrastructure.Injection;
 using DriftingBytesLabs.AwsOrleans.Directory.Infrastructure.Injection;
 using DriftingBytesLabs.AwsOrleans.Host.Api.v1;
 using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+//builder.Host
+//    .UseDirectoryServices()
+//    ;
+
 //  --------------------------------------------------------------------------------------------------------------------
 //  Injects our services
 //  --------------------------------------------------------------------------------------------------------------------
 builder.Services
+    .AddDiagnosticsServices(builder.Configuration)
     .AddDirectoryServices()
     ;
 
@@ -21,11 +27,8 @@ builder.Services
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-//}
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
 

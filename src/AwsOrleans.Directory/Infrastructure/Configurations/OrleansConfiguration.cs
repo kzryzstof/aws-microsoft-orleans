@@ -6,5 +6,9 @@ internal sealed class OrleansConfiguration
     
     public string ServiceId { get; init; } = string.Empty;
     
-    public string ClusterStorageAccountConnectionString { get; init; } = string.Empty;
+    public string ClusteringTableName { get; init; } = string.Empty;
+
+    public string DataGrainTableName { get; init; } = string.Empty;
+
+    public string Region { get; init; } = string.Empty;
 }
