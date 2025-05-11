@@ -7,7 +7,7 @@ terraform {
     }
     string-functions = {
       source = "registry.terraform.io/random-things/string-functions"
-      version = "~> 0.1.0"
+      version = ">= 1.8.0"
     }
   }
 }
