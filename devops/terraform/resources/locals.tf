@@ -2,7 +2,7 @@ locals {
   service_name = "AwsOrleans"
   product_name = "Prototypes"
   
-  environment_name = pascal_case(var.environment_name)
+  environment_name = provider::string-functions::pascal_case(var.environment_name)
   
   resources_name = {
     service_role_name = "${local.service_name}${local.environment_name}${var.environment_instance}}Role"
