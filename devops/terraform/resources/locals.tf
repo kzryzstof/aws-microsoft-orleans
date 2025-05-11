@@ -10,15 +10,15 @@ locals {
     app_runner = "${local.service_name}${local.environment}${var.environment_instance}}"
     
     dynamodb_tables = {
-      cluster = "${local.service_name}${local.environment}${var.environment_instance}}OrleansClusterTable"
-      data_grain = "${local.service_name}${local.environment}${var.environment_instance}}DataGrainStorage"
+      cluster = "${local.service_name}${local.environment}${var.environment_instance}OrleansClusterTable"
+      data_grain = "${local.service_name}${local.environment}${var.environment_instance}DataGrainStorage"
     }
 
     policies = {
       # Policies do not support numbers: which means in case of disposable environment,
       # we might want to reuse the same policies.
-      cluster = "${local.service_name}${local.environment}}OrleansClusterPolicy"
-      data_grain = "${local.service_name}${local.environment}}DataGrainPolicy"
+      cluster = "${local.service_name}${local.environment}OrleansClusterPolicy"
+      data_grain = "${local.service_name}${local.environment}DataGrainPolicy"
     }
   }
   
