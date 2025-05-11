@@ -12,7 +12,7 @@ resource "aws_iam_role" "app_runner_role" {
         Effect = "Allow"
         Sid    = ""
         Principal = {
-          Service = "tasks.apprunner.amazonaws.com"
+          Service = "build.apprunner.amazonaws.com"
         }
       },
     ]
