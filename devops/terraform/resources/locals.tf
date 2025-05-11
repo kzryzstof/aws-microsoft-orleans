@@ -22,6 +22,11 @@ locals {
     }
   }
   
+  orleans = {
+    cluster_id = "aws-orleans"
+    service_id = "aws-orleans"
+  }
+  
   tags = {
     "service": local.service_name
     "environment": var.environment_name,

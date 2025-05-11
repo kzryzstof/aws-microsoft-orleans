@@ -71,6 +71,7 @@ stages:
               workingDirectory              : ${{ variables.terraformFolder }}
               publishPlanResults            : 'Plan (${{ parameters.environment_name }})'
             env:
+              "TF_VAR_region"               : ${{ variables.terraform_AwsRegion }}
               "TF_VAR_image_tag"            : ${{ variables.awsContainerRegistryUrl }}/${{ variables.imageRepository }}:$(Build.BuildNumber)
               "TF_VAR_build_number"         : $(Build.BuildNumber)
               "TF_VAR_environment_name"     : ${{ parameters.environment_name }}

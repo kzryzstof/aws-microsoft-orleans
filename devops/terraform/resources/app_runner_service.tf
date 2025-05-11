@@ -14,6 +14,15 @@ resource "aws_apprunner_service" "default" {
         port = "8080"
       }
 
+      # This is where you define environment variables
+      environment_variables = {
+        "OrleansConfiguration__ClusterId" = local.orleans.cluster_id
+        "OrleansConfiguration__ServiceId" = local.orleans.service_id
+        "OrleansConfiguration__Region"    = var.region
+        "OrleansConfiguration__ClusteringTableName" = aws_dynamodb_table.orleans_cluster.arn
+        "OrleansConfiguration__DataGrainTableName"  = aws_dynamodb_table.data_grain.arn
+      }
+
       image_identifier      = var.image_tag
       image_repository_type = "ECR"
     }
