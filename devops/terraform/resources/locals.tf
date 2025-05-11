@@ -1,5 +1,5 @@
 locals {
-  service_name = "AwsOrleans"
+  service_name = "OrleansApp"
   product_name = "Prototypes"
   
   environment = provider::string-functions::pascal_case(var.environment_name)
