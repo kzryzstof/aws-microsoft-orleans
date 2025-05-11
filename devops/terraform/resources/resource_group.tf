@@ -1,14 +1,5 @@
-module "resource_group_naming_convention" {
-  source              = "../modules/naming_convention"
-  environment         = var.environment_name
-  name                = local.service_name
-  type                = "rg"
-  instance            = var.environment_instance
-  delimiter           = "-"
-}
-
 resource "aws_resourcegroups_group" "default" {
-  name  = module.resource_group_naming_convention.name
+  name  = local.resources_names.resource_group
 
   resource_query {
     query = <<JSON

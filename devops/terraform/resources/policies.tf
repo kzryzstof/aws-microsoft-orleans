@@ -15,7 +15,7 @@ resource "aws_iam_role_policy_attachment" "dynamo_db_orleans_cluster_policy_atta
 }
 
 resource "aws_iam_policy" "dynamo_db_orleans_cluster_policy" {
-  name = local.resources_name.policies.cluster_table
+  name = local.resources_names.policies.cluster
   path        = "/"
   description = "Policy to access the Orleans Cluster Dynamo DB table"
 
@@ -55,7 +55,7 @@ resource "aws_iam_role_policy_attachment" "dynamo_db_data_grain_policy_attachmen
 }
 
 resource "aws_iam_policy" "dynamodb_data_grain_table_policy" {
-  name = local.resources_name.policies.data_grain
+  name = local.resources_names.policies.data_grain
   path        = "/"
   description = "Policy to access the Data Grain Dynamo DB table"
 

@@ -1,5 +1,5 @@
 resource "aws_iam_role" "service_role" {
-  name = local.resources_name.service_role_name
+  name = local.resources_names.service_role
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

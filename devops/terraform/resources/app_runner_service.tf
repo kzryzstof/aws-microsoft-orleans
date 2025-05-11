@@ -2,7 +2,7 @@
 //  App Runner resource
 //  --------------------------------------------------------------------------------------------------------------------
 resource "aws_apprunner_service" "default" {
-  service_name = local.resources_name.app_runner_name
+  service_name = local.resources_names.app_runner
 
   auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.auto.arn
 
