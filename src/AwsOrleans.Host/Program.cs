@@ -34,4 +34,6 @@ app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
 
-app.Run();
+app.MapControllers();
+
+await app.RunAsync();
