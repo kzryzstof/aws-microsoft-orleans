@@ -14,8 +14,10 @@ locals {
     }
 
     policies = {
-      cluster_table = "${local.service_name}${local.environment_name}${var.environment_instance}}OrleansClusterPolicy"
-      data_grain = "${local.service_name}${local.environment_name}${var.environment_instance}}DataGrainPolicy"
+      # Policies do not support numbers: which means in case of disposable environment,
+      # we might want to reuse the same policies.
+      cluster_table = "${local.service_name}${local.environment_name}}OrleansClusterPolicy"
+      data_grain = "${local.service_name}${local.environment_name}}DataGrainPolicy"
     }
   }
   
