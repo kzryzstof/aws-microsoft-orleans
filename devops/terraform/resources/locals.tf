@@ -1,13 +1,13 @@
 locals {
-  service_name = "aws-orleans"
+  service_name = "AwsOrleans"
   product_name = "Prototypes"
   
   environment = provider::string-functions::pascal_case(var.environment_name)
 
   resources_names = {
-    resource_group = "rg-${replace("-", "", provider::string-functions::pascal_case(local.service_name))}-${var.environment_name}-${var.environment_instance}"
-    service_role = "${local.service_name}${local.environment}${var.environment_instance}}Role"
-    app_runner = "${local.service_name}${local.environment}${var.environment_instance}}"
+    resource_group = "${local.service_name}${local.environment}${var.environment_instance}"
+    service_role = "${local.service_name}${local.environment}${var.environment_instance}Role"
+    app_runner = "${local.service_name}${local.environment}${var.environment_instance}"
     
     dynamodb_tables = {
       cluster = "${local.service_name}${local.environment}${var.environment_instance}OrleansClusterTable"
