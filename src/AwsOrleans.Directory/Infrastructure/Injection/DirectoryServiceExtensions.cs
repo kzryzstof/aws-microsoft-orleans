@@ -102,7 +102,7 @@ public static class DirectoryServiceExtensions
     {
         siloBuilder.AddDynamoDBGrainStorage
         (
-            "data",
+            Wellknown.DataStorageName,
             options =>
             {
                 options.DeleteStateOnClear = true;

@@ -5,9 +5,9 @@ using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-//builder.Host
-//    .UseDirectoryServices()
-//    ;
+builder.Host
+    .UseDirectoryServices()
+    ;
 
 //  --------------------------------------------------------------------------------------------------------------------
 //  Injects our services

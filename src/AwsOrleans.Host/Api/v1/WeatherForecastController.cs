@@ -2,6 +2,8 @@ using System.Net;
 using System.Net.Mime;
 using Asp.Versioning;
 using CommunityToolkit.Diagnostics;
+using DriftingBytesLabs.AwsOrleans.Abstractions.Entities;
+using DriftingBytesLabs.AwsOrleans.Abstractions.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DriftingBytesLabs.AwsOrleans.Host.Api.v1;
@@ -12,27 +14,28 @@ namespace DriftingBytesLabs.AwsOrleans.Host.Api.v1;
 [Produces(MediaTypeNames.Application.Json)]
 public sealed class WeatherForecastController : ControllerBase
 {
-    private static readonly string[] Summaries =
-    [
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    ];
-    
     private readonly ILogger<WeatherForecastController> _logger;
+    private readonly IDirectoryService _directoryService;
 
     public WeatherForecastController
     (
-        ILogger<WeatherForecastController> logger
+        ILogger<WeatherForecastController> logger,
+        IDirectoryService directoryService
     )
     {
         Guard.IsNotNull(logger);
+        Guard.IsNotNull(directoryService);
 
         _logger = logger;
+        _directoryService = directoryService;
     }
 
     [ProducesResponseType(typeof(List<WeatherForecast>), StatusCodes.Status200OK)]
     [HttpGet]
-    public IActionResult GetAsync
+    public async Task<IActionResult> GetAsync
     (
+        [FromQuery(Name = "postalCode")]
+        string postalCode,
         CancellationToken cancellationToken
     )
     {
@@ -42,18 +45,10 @@ public sealed class WeatherForecastController : ControllerBase
         {
             _logger.LogWarning("--> RECEIVED REQUEST!!");
             
-            var forecast = Enumerable
-                .Range(1, 5)
-                .Select
-                (
-                    index => new WeatherForecast
-                    (
-                        DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        Random.Shared.Next(-20, 55),
-                        Summaries[Random.Shared.Next(Summaries.Length)]
-                    )
-                )
-                .ToArray();
+            var forecast = await _directoryService.GetAsync
+            (
+                postalCode
+            );
             
             return Ok(forecast);
         }
