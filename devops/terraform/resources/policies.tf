@@ -35,7 +35,8 @@ resource "aws_iam_policy" "dynamo_db_orleans_cluster_policy" {
           "dynamodb:UpdateItem",
           "dynamodb:DeleteItem",
           "dynamodb:Query",
-          "dynamodb:Scan"
+          "dynamodb:Scan",
+          "dynamodb:DescribeTimeToLive"
         ]
         Effect   = "Allow"
         Resource = aws_dynamodb_table.orleans_cluster.arn
@@ -75,7 +76,8 @@ resource "aws_iam_policy" "dynamodb_data_grain_table_policy" {
           "dynamodb:UpdateItem",
           "dynamodb:DeleteItem",
           "dynamodb:Query",
-          "dynamodb:Scan"
+          "dynamodb:Scan",
+          "dynamodb:DescribeTimeToLive"
         ]
         Effect   = "Allow"
         Resource = aws_dynamodb_table.data_grain.arn
