@@ -25,7 +25,7 @@ internal sealed class DirectoryService : IDirectoryService
     )
     {
        return await _clusterClient
-            .GetGrain<IWeatherForecastController>(postalCode)
+            .GetGrain<IWeatherForecastController>(postalCode.ToLowerInvariant())
             .GetAsync();    
     }
 }

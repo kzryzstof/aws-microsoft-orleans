@@ -35,7 +35,7 @@ public sealed class WeatherForecastController : ControllerBase
     public async Task<IActionResult> GetAsync
     (
         [FromQuery(Name = "postalCode")]
-        string postalCode,
+        string? postalCode,
         CancellationToken cancellationToken
     )
     {
@@ -47,7 +47,7 @@ public sealed class WeatherForecastController : ControllerBase
             
             var forecast = await _directoryService.GetAsync
             (
-                postalCode
+                postalCode ?? "J6N0J1"
             );
             
             return Ok(forecast);
