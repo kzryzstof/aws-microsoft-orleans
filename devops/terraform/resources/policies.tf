@@ -2,7 +2,7 @@
 //  ECR policy
 //  --------------------------------------------------------------------------------------------------------------------
 resource "aws_iam_role_policy_attachment" "app_runner" {
-  role       = aws_iam_role.service_role.name
+  role       = aws_iam_role.deployment_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess"
 }
 

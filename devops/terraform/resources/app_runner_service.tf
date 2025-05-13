@@ -22,16 +22,20 @@ resource "aws_apprunner_service" "default" {
           OrleansConfiguration__DataGrainTableName   = aws_dynamodb_table.data_grain.name
         }
       }
-
+      
       image_identifier      = var.image_tag
       image_repository_type = "ECR"
     }
 
     authentication_configuration {
-      access_role_arn = aws_iam_role.service_role.arn
+      access_role_arn = aws_iam_role.deployment_role.arn
     }
-    
+
     auto_deployments_enabled = false
+  }
+
+  instance_configuration {
+    instance_role_arn = aws_iam_role.service_role.arn
   }
   
   tags = local.tags
