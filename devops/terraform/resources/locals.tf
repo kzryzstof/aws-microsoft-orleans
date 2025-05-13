@@ -6,7 +6,8 @@ locals {
 
   resources_names = {
     resource_group = "${local.service_name}${local.environment}${var.environment_instance}"
-    service_role = "${local.service_name}${local.environment}${var.environment_instance}Role"
+    service_role = "${local.service_name}${local.environment}${var.environment_instance}ServiceRole"
+    deploy_role = "${local.service_name}${local.environment}${var.environment_instance}DeployRole"
     app_runner = "${local.service_name}${local.environment}${var.environment_instance}"
     
     dynamodb_tables = {
