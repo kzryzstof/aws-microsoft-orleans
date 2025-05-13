@@ -23,11 +23,6 @@ internal sealed class WeatherForecastGrain : Grain, IWeatherForecastController
         _state = state;
     }
 
-    public override Task OnActivateAsync(CancellationToken cancellationToken)
-    {
-        return base.OnActivateAsync(cancellationToken);
-    }
-
     public async Task<WeatherForecast[]> GetAsync()
     {
         _state.State.CallsCount++;
@@ -43,7 +38,8 @@ internal sealed class WeatherForecastGrain : Grain, IWeatherForecastController
                         Environment.MachineName,
                         DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
                         Random.Shared.Next(-20, 55),
-                        Summaries[Random.Shared.Next(Summaries.Length)]
+                        Summaries[Random.Shared.Next(Summaries.Length)],
+                        _state.State.CallsCount
                     )
                 )
                 .ToArray();

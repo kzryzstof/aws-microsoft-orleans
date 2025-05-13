@@ -25,7 +25,7 @@ public static class DirectoryServiceExtensions
 
             ConfigureEndpoint(siloBuilder);
 
-            ConfigureGrainStorage(hostBuilderContext, siloBuilder, orleansConfiguration);
+            ConfigureGrainStorage(siloBuilder, orleansConfiguration);
         });
         
         return hostBuilder;
@@ -97,11 +97,19 @@ public static class DirectoryServiceExtensions
     
     private static void ConfigureGrainStorage
     (
-        HostBuilderContext hostBuilderContext,
         ISiloBuilder siloBuilder,
         OrleansConfiguration orleansConfiguration
     )
     {
+        siloBuilder.Configure<GrainCollectionOptions>
+        (
+            options =>
+            {
+                options.CollectionAge = TimeSpan.FromMinutes(1);
+                options.CollectionQuantum = TimeSpan.FromMinutes(1);
+            }
+        );
+        
         siloBuilder.AddDynamoDBGrainStorage
         (
             Wellknown.DataStorageName,

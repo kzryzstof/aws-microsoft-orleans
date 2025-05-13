@@ -46,8 +46,8 @@ resource "aws_apprunner_service" "default" {
 //  --------------------------------------------------------------------------------------------------------------------
 resource "aws_apprunner_auto_scaling_configuration_version" "auto" {
   auto_scaling_configuration_name = "default_scaling"
-  min_size = 1
-  max_size = 1
+  min_size = 3
+  max_size = 5
 }
 
 resource "aws_apprunner_default_auto_scaling_configuration_version" "default" {

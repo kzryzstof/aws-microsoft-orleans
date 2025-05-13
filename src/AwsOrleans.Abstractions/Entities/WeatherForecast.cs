@@ -16,7 +16,10 @@ public readonly record struct WeatherForecast
     int TemperatureC,
     [property: Id(3)]
     [property: JsonPropertyName("summary")]
-    string Summary = ""
+    string Summary,
+    [property: Id(4)]
+    [property: JsonPropertyName("callCount")]
+    int Count
 )
 {
     [JsonIgnore]
