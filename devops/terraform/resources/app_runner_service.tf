@@ -59,7 +59,3 @@ resource "aws_apprunner_auto_scaling_configuration_version" "medium" {
   min_size = 3
   max_size = 5
 }
-
-resource "aws_apprunner_default_auto_scaling_configuration_version" "default" {
-  auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.auto.arn
-}
