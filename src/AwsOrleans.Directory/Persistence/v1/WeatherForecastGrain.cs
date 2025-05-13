@@ -23,9 +23,15 @@ internal sealed class WeatherForecastGrain : Grain, IWeatherForecastController
         _state = state;
     }
 
+    public override Task OnActivateAsync(CancellationToken cancellationToken)
+    {
+        return base.OnActivateAsync(cancellationToken);
+    }
+
     public async Task<WeatherForecast[]> GetAsync()
     {
         _state.State.CallsCount++;
+        
         await _state.WriteStateAsync();
         
         return Enumerable

@@ -75,6 +75,7 @@ public static class DirectoryServiceExtensions
                 options =>
                 {
                     options.CreateIfNotExists = true;
+                    options.UpdateIfExists = true;
                     options.Service = orleansConfiguration.Region;
                     options.TableName = orleansConfiguration.ClusteringTableName;
                     options.UseProvisionedThroughput = false;
@@ -108,6 +109,7 @@ public static class DirectoryServiceExtensions
             {
                 options.DeleteStateOnClear = true;
                 options.CreateIfNotExists = true;
+                options.UpdateIfExists = true;
                 options.Service = orleansConfiguration.Region;
                 options.TableName = orleansConfiguration.DataGrainTableName;
                 options.UseProvisionedThroughput = false;
