@@ -105,7 +105,7 @@ public static class DirectoryServiceExtensions
         (
             options =>
             {
-                options.CollectionAge = TimeSpan.FromMinutes(1);
+                options.CollectionAge = TimeSpan.FromMinutes(2);
                 options.CollectionQuantum = TimeSpan.FromMinutes(1);
             }
         );
