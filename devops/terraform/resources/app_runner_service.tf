@@ -4,7 +4,7 @@
 resource "aws_apprunner_service" "default" {
   service_name = local.resources_names.app_runner
 
-  auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.auto.arn
+  auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.medium.arn
 
   source_configuration {
     
@@ -46,6 +46,16 @@ resource "aws_apprunner_service" "default" {
 //  --------------------------------------------------------------------------------------------------------------------
 resource "aws_apprunner_auto_scaling_configuration_version" "auto" {
   auto_scaling_configuration_name = "default_scaling"
+  min_size = 1
+  max_size = 1
+}
+
+resource "aws_apprunner_default_auto_scaling_configuration_version" "default" {
+  auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.auto.arn
+}
+
+resource "aws_apprunner_auto_scaling_configuration_version" "medium" {
+  auto_scaling_configuration_name = "medium_scaling"
   min_size = 3
   max_size = 5
 }
